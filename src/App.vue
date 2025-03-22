@@ -7,6 +7,8 @@
         :product="product" 
         @edit="handleEdit" 
         @delete="handleDelete" 
+        @increaseStock="handleIncreaseStock"
+        @decreaseStock="handleDecreaseStock"
       />
     </div>
   </div>
@@ -23,12 +25,13 @@ const productToEdit = ref<Product | null>(null);
 
 const handleSave = (product: Product) => {
   if (product.id) {
-    productStore.updateProduct(product);  // Update existing product
+    productStore.updateProduct(product);  
   } else {
-    product.id = Date.now().toString();  // Generate a new ID for the product
-    productStore.addProduct(product);          // Add new product
+    product.id = Date.now().toString();  
+    productStore.addProduct(product); 
   }
 };
+
 
 const handleEdit = (product: Product) => {
   productToEdit.value = { ...product };
@@ -36,6 +39,13 @@ const handleEdit = (product: Product) => {
 
 const handleDelete = (id: string) => {
   productStore.deleteProduct(id);
+};
+const handleIncreaseStock = (id: string) => {
+  productStore.increaseStock(id);
+};
+
+const handleDecreaseStock = (id: string) => {
+  productStore.decreaseStock(id);
 };
 </script>
 

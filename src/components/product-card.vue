@@ -1,31 +1,59 @@
 <template>
   <div class="product-card">
-    <h3>{{ product.name }}</h3>
-    <p>Price: ${{ product.price }}</p>
+    <h2>{{ product.name }}</h2>
     <p>Stock: {{ product.stock }}</p>
-    <p v-if="product.stock === 0" class="out-of-stock">Out of Stock</p>
-    <button @click="startEdit">Edit</button>
-    <button @click="deleteProduct">Delete</button>
+    
+    <div class="actions">
+      <button @click="decreaseStock" :disabled="product.stock === 0">-</button>
+      <button @click="increaseStock">+</button>
+    </div>
+
+    <p v-if="product.stock === 0" class="warning">⚠️ Stock is empty!</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
 import type { Product } from '@/interfaces/Product';
+import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{ product: Product }>();
-const emit = defineEmits(['edit', 'delete']);
+const emit = defineEmits(['increaseStock', 'decreaseStock']);
 
-const startEdit = () => {
-  emit('edit', props.product);
+const increaseStock = () => {
+
+  emit('increaseStock', props.product.id);
 };
 
-const deleteProduct = () => {
-  emit('delete', props.product.id);
+const decreaseStock = () => {
+  if (props.product.stock > 0) {
+    emit('decreaseStock', props.product.id);
+  }
 };
 </script>
 
 <style scoped>
-.product-card { border: 1px solid #ddd; padding: 10px; margin: 5px; }
-.out-of-stock { color: red; }
+.product-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
+  width: 200px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 6px 12px;
+  font-size: 16px;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+}
 </style>

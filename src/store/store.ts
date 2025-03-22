@@ -24,6 +24,24 @@ export const productStore = reactive({
         }
     },
 
+    increaseStock(id: string) {
+        console.log(id)
+        const product = this.products.find(p => p.id === id);
+        console.log(product)
+        if (product) {
+            product.stock++;
+            this.saveToLocalStorage();
+        }
+    },
+
+    decreaseStock(id: string) {
+        const product = this.products.find(p => p.id === id);
+        if (product && product.stock > 0) {
+            product.stock--;
+            this.saveToLocalStorage();
+        }
+    },
+
     deleteProduct(id: string) {
         this.products = this.products.filter(product => product.id !== id);
         this.saveToLocalStorage();
