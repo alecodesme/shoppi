@@ -1,29 +1,9 @@
-# shoppi
+Preguntar a responder
 
-This template should help get you started developing with Vue 3 in Vite.
+1. En Vue 3, reactive() convierte un objeto en reactivo, pero Vue no detecta los cambios en propiedades anidadas si estas se añaden después de que el objeto haya sido creado. Para manejar este tipo de cambios en propiedades anidadas, se recomienda utilizar Vue.set() o, en Vue 3, puedes usar la función reactive() para hacerlo.
 
-## Recommended IDE Setup
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+2. watch() es una función de Vue que te permite observar cambios en datos reactivos y ejecutar una función cuando ocurre un cambio. Se puede utilizar para observar propiedades específicas dentro de un objeto reactivo, lo cual es muy útil cuando necesitas realizar una acción cada vez que se cambie una propiedad en particular.
 
-## Customize configuration
+3. Cuando tienes un array de productos y cada producto es un objeto reactivo, y quieres observar cambios en el stock de cualquiera de los productos, puedes hacer que watch() observe el array completo o una propiedad específica dentro de cada producto.
 
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
