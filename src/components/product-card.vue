@@ -1,7 +1,7 @@
 <template>
   <div 
     class="product-card"
-    :class="{ selected: selected }" 
+    :class="{ selected: selected, disabled: isDisabled }" 
     @click="toggleSelection"
   >
     <div class="header">
@@ -16,36 +16,46 @@
     </div>
     
     <div class="actions">
-      <button @click.stop="deleteProduct">Borrar</button>
-      <button @click.stop="editProduct">Editarr</button>
+      <button @click.stop="deleteProduct" :disabled="isDisabled">Borrar</button>
+      <button @click.stop="editProduct" :disabled="isDisabled">Editar</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref, defineProps, defineEmits, computed } from 'vue';
 import type { Product } from '@/interfaces/Product';
 
-const props = defineProps<{ product: Product, canSelect: boolean }>();
+const props = defineProps<{ product: Product, canSelect: boolean, view: string }>();
 const emit = defineEmits(['increaseStock', 'decreaseStock', 'delete', 'toggleSelection', 'edit']);
 const selected = ref(false);
+
+// Computed property to determine if the product is disabled based on the 'view' prop
+const isDisabled = computed(() => {
+  if (props.view === 'sell-product' && props.product.stock === 0) {
+    return true; // Disables the product card if it's for selling and stock is 0
+  }
+  if (props.view === 'add-stock-to-product') {
+    return false; // Allows interaction when adding stock
+  }
+  return false; // Default to not disabled
+});
 
 const deleteProduct = () => {
   if (props.product.id) {
     emit('delete', props.product.id);
   }
 };
+
 const editProduct = () => {
   emit('edit', props.product);
-}
-
+};
 
 const toggleSelection = () => {
-  if(props.canSelect){
+  if (props.canSelect && !isDisabled.value) {
     selected.value = !selected.value;  
     emit('toggleSelection', props.product);
   }
-
 };
 </script>
 
@@ -133,5 +143,13 @@ button:last-child {
 
 button:last-child:hover {
   background: #388e3c;
+}
+
+/* Nueva clase para deshabilitar la carta */
+.product-card.disabled {
+  background-color: #f8d7da;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
 }
 </style>

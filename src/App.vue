@@ -11,6 +11,7 @@
       <div class="product-grid">
         <div v-for="product in filteredProducts" :key="product.id" class="product-item">
           <ProductCard 
+            :view="viewSelection"
             :product="product" 
             :isSelected="selectedProducts.map(pr => pr.id).includes(product.id)"  
             @edit="handleEdit" 
