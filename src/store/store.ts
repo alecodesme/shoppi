@@ -25,9 +25,7 @@ export const productStore = reactive({
     },
 
     increaseStock(id: string) {
-        console.log(id)
         const product = this.products.find(p => p.id === id);
-        console.log(product)
         if (product) {
             product.stock++;
             this.saveToLocalStorage();

@@ -1,6 +1,15 @@
 <template>
   <div class="product-card">
-    <h2>{{ product.name }}</h2>
+    <div class="header">
+      <input 
+        type="checkbox" 
+        class="custom-checkbox" 
+        v-model="selected" 
+        @change="toggleSelection"
+      />
+      <h2>{{ product.name }}</h2>
+    </div>
+    
     <div v-if="product.stock === 0">
       <span class="warning">⚠️ Stock is empty!</span>
     </div>
@@ -13,19 +22,19 @@
       <button @click="increaseStock">+</button>
     </div>
 
-    <button @click="deleteProduct">borrar</button>
+    <button @click="deleteProduct">Borrar</button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, defineProps, defineEmits } from 'vue';
 import type { Product } from '@/interfaces/Product';
-import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps<{ product: Product }>();
-const emit = defineEmits(['increaseStock', 'decreaseStock','delete']);
+const emit = defineEmits(['increaseStock', 'decreaseStock', 'delete', 'toggleSelection']);
+const selected = ref(false);
 
 const increaseStock = () => {
-
   emit('increaseStock', props.product.id);
 };
 
@@ -34,11 +43,16 @@ const decreaseStock = () => {
     emit('decreaseStock', props.product.id);
   }
 };
+
 const deleteProduct = () => {
-  if(props.product.id) {
-    emit('delete', props.product.id)
+  if (props.product.id) {
+    emit('delete', props.product.id);
   }
-}
+};
+
+const toggleSelection = () => {
+  emit('toggleSelection', props.product);
+};
 </script>
 
 <style scoped>
@@ -55,6 +69,20 @@ const deleteProduct = () => {
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+}
+
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #4caf50;
+  cursor: pointer;
 }
 
 h2 {
