@@ -1,12 +1,10 @@
 <template>
-  <div class="product-card">
+  <div 
+    class="product-card"
+    :class="{ selected: selected }" 
+    @click="toggleSelection"
+  >
     <div class="header">
-      <input 
-        type="checkbox" 
-        class="custom-checkbox" 
-        v-model="selected" 
-        @change="toggleSelection"
-      />
       <h2>{{ product.name }}</h2>
     </div>
     
@@ -18,11 +16,9 @@
     </div>
     
     <div class="actions">
-      <button @click="decreaseStock" :disabled="product.stock === 0">-</button>
-      <button @click="increaseStock">+</button>
+      <button @click.stop="deleteProduct">Borrar</button>
+      <button @click.stop="editProduct">Editarr</button>
     </div>
-
-    <button @click="deleteProduct">Borrar</button>
   </div>
 </template>
 
@@ -30,40 +26,38 @@
 import { ref, defineProps, defineEmits } from 'vue';
 import type { Product } from '@/interfaces/Product';
 
-const props = defineProps<{ product: Product }>();
-const emit = defineEmits(['increaseStock', 'decreaseStock', 'delete', 'toggleSelection']);
+const props = defineProps<{ product: Product, canSelect: boolean }>();
+const emit = defineEmits(['increaseStock', 'decreaseStock', 'delete', 'toggleSelection', 'edit']);
 const selected = ref(false);
-
-const increaseStock = () => {
-  emit('increaseStock', props.product.id);
-};
-
-const decreaseStock = () => {
-  if (props.product.stock > 0) {
-    emit('decreaseStock', props.product.id);
-  }
-};
 
 const deleteProduct = () => {
   if (props.product.id) {
     emit('delete', props.product.id);
   }
 };
+const editProduct = () => {
+  emit('edit', props.product);
+}
+
 
 const toggleSelection = () => {
-  emit('toggleSelection', props.product);
+  if(props.canSelect){
+    selected.value = !selected.value;  
+    emit('toggleSelection', props.product);
+  }
+
 };
 </script>
 
 <style scoped>
 .product-card {
-  background: #fff;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 220px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+  cursor: pointer;
 }
 
 .product-card:hover {
@@ -74,15 +68,7 @@ const toggleSelection = () => {
 .header {
   display: flex;
   align-items: center;
-  gap: 10px;
   justify-content: center;
-}
-
-.custom-checkbox {
-  width: 18px;
-  height: 18px;
-  accent-color: #4caf50;
-  cursor: pointer;
 }
 
 h2 {
@@ -115,6 +101,11 @@ button {
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.3s, transform 0.2s;
+}
+
+.selected {
+  background-color: #c8f7c5;
+  border-color: #27ae60; 
 }
 
 button:disabled {

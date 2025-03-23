@@ -29,7 +29,7 @@ watch(() => props.productToEdit, (newProduct) => {
   } else {
     resetForm();
   }
-});
+}, { immediate: true });
 
 const handleSubmit = () => {
   emit('save', { ...form });

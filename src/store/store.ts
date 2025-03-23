@@ -32,6 +32,26 @@ export const productStore = reactive({
         }
     },
 
+    addStockToProducts(products: Product[]) {
+        products.forEach(newProduct => {
+            const product = this.products.find(p => p.id === newProduct.id);
+            if (product) {
+                product.stock += newProduct.stock;
+            }
+        });
+        this.saveToLocalStorage();
+    },
+
+    sellProducts(products: Product[]) {
+        products.forEach(soldProduct => {
+            const product = this.products.find(p => p.id === soldProduct.id);
+            if (product && product.stock >= soldProduct.stock) {
+                product.stock -= soldProduct.stock;
+            }
+        });
+        this.saveToLocalStorage();
+    },
+
     decreaseStock(id: string) {
         const product = this.products.find(p => p.id === id);
         if (product && product.stock > 0) {
